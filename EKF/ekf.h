@@ -197,6 +197,9 @@ public:
 	// check if the EKF is dead reckoning horizontal velocity using inertial data only
 	void update_deadreckoning_status();
 
+	// return true if ev data has caused a reset in horizontal position or vertical height
+	bool get_inflight_ev_status() const { return _inflight_ev_error; };
+
 	// return true if the terrain estimate is valid
 	bool get_terrain_valid();
 
@@ -460,6 +463,9 @@ private:
 	bool _gps_hgt_faulty{false};		///< true if valid gps height data is unavailable for use
 	bool _rng_hgt_faulty{false};		///< true if valid range finder height data is unavailable for use
 	int _primary_hgt_source{VDIST_SENSOR_BARO};	///< specifies primary source of height data
+
+	// ev fault status
+	bool _inflight_ev_error{false};     /// < true if external vision data causes a reset in height or horizontal position
 
 	// imu fault status
 	uint64_t _time_bad_vert_accel{0};	///< last time a bad vertical accel was detected (uSec)

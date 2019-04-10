@@ -321,8 +321,9 @@ void Ekf::controlExternalVisionFusion()
 					if ((_time_last_imu - _time_last_of_fuse) > (uint64_t)1E6) {
 						resetVelocity();
 					}
-
 					resetPosition();
+					_inflight_ev_error = true;
+					ECL_WARN("EKF ev horizontal pos timeout - reset");				
 				}
 			}
 
@@ -928,6 +929,8 @@ void Ekf::controlHeightSensorTimeouts()
 				// request a reset
 				reset_height = true;
 				ECL_WARN("EKF ev hgt timeout - reset to ev hgt");
+				// signal that ev data has caused
+				_inflight_ev_error = true;
 
 			} else {
 				// we have nothing to reset to
