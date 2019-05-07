@@ -315,6 +315,9 @@ void Ekf::controlExternalVisionFusion()
 				_vel_pos_innov[3] = _state.pos(0) - _ev_sample_delayed.posNED(0);
 				_vel_pos_innov[4] = _state.pos(1) - _ev_sample_delayed.posNED(1);
 
+				if ((_time_last_imu - _time_last_pos_fuse) > 250000) 
+					_inflight_ev_error = true;
+
 				// check if we have been deadreckoning too long
 				if ((_time_last_imu - _time_last_pos_fuse) > _params.reset_timeout_max) {
 					// don't reset velocity if we have another source of aiding constraining it
@@ -322,8 +325,7 @@ void Ekf::controlExternalVisionFusion()
 						resetVelocity();
 					}
 					resetPosition();
-					_inflight_ev_error = true;
-					ECL_WARN("EKF ev horizontal pos timeout - reset");				
+					ECL_WARN("EKF ev horizontal pos timeout - reset");
 				}
 			}
 
