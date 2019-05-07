@@ -316,8 +316,11 @@ void Ekf::controlExternalVisionFusion()
 				_vel_pos_innov[4] = _state.pos(1) - _ev_sample_delayed.posNED(1);
 
 				// if we have not fused for longer than half a second, signal ev error
-				if ((_time_last_imu - _time_last_pos_fuse) > (uint64_t)500000) 
+				if ((_time_last_imu - _time_last_pos_fuse) > (uint64_t)500000)
+				{
 					_inflight_ev_error = true;
+					ECL_WARN("EKF ev fusion timeout");
+				}
 
 				// check if we have been deadreckoning too long
 				if ((_time_last_imu - _time_last_pos_fuse) > _params.reset_timeout_max) {
@@ -356,7 +359,7 @@ void Ekf::controlExternalVisionFusion()
 		   && ((_time_last_imu - _time_last_ext_vision) > (uint64_t)500000)) {
 
 			   _inflight_ev_error = true;
-			   ECL_INFO("EKF External Vision Data Stopped");
+			   ECL_INFO("EKF ev data stopped");
 
 	} else if (_control_status.flags.ev_pos
 		   && (_time_last_imu >= _time_last_ext_vision)
@@ -364,7 +367,7 @@ void Ekf::controlExternalVisionFusion()
 
 		// Turn off EV fusion mode if no data has been received after max timeout
 		_control_status.flags.ev_pos = false;
-		ECL_INFO("EKF External Vision timeout, turning off fusion");
+		ECL_INFO("EKF EV timeout, turning off fusion");
 	}
 }
 
