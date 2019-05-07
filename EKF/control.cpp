@@ -364,7 +364,7 @@ void Ekf::controlExternalVisionFusion()
 
 		// Turn off EV fusion mode if no data has been received after max timeout
 		_control_status.flags.ev_pos = false;
-		ECL_INFO("EKF External Vision - Turning Off");
+		ECL_INFO("EKF External Vision timeout, turning off fusion");
 	}
 }
 
